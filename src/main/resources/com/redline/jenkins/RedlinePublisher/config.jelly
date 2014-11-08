@@ -1,0 +1,85 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="Provided by Redline13">
+      <a href="http://www.redline13.com/Service" target="_blank">
+        <img style="max-height:42px;" src="${rootURL}/plugin/redline-jenkins-plugin/images/logo.png" alt="logo"/>
+      </a>
+    </f:entry>
+    
+    <j:set var="keys" value="${descriptor.getCredentials(it)}"/>
+    
+    <j:if test="${keys.size() &gt; 1}">
+      <f:entry title="${%API Key}" field="apiKey">
+        <f:select style="width:32em;"/>
+      </f:entry>
+    </j:if>
+    
+    <f:entry title="${%Redline13 Test}:" field="templateId">
+      <f:select>
+      </f:select>
+    </f:entry>
+    
+     <f:entry title="${%Success Threshold}:" description="${%Threshold.Description}" field="successThreshold">
+      <table width="350px">
+        <thead>
+          <tr>
+            <td/>
+            <td colspan="2">
+              <img src="${rootURL}/images/16x16/yellow.gif" alt="yellow"/>
+              ${%Unstable}
+            </td>
+            <td colspan="2">
+              <img src="${rootURL}/images/16x16/red.gif" alt="red"/>
+              ${%Failed}
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="vertical-align:middle">${%Threshold}:</td>
+            <td>
+              <f:textbox field="errorUnstableThreshold"/>
+            </td>
+            <td>%</td>
+            <td>
+              <f:textbox field="errorFailedThreshold"/>
+            </td>
+            <td>%</td>
+          </tr>
+        </tbody>
+      </table>
+    </f:entry>
+
+    <f:entry title="${%Response Time threshold}:" description="${%Response.Description}" field="responseTimeThreshold">
+    <table width="350px">
+      <thead>
+        <tr>
+        <td/>
+        <td colspan="2">
+          <img src="${rootURL}/images/16x16/yellow.gif" alt="yellow"/>
+          ${%Unstable}
+        </td>
+        <td colspan="2">
+          <img src="${rootURL}/images/16x16/red.gif" alt="red"/>
+          ${%Failed}
+        </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="vertical-align:middle">${%Response Time}:</td>
+          <td>
+            <f:textbox field="responseTimeUnstableThreshold"/>
+          </td>
+          <td>ms</td>
+          <td>
+            <f:textbox field="responseTimeFailedThreshold"/>
+          </td>
+          <td>ms</td>
+        </tr>
+      </tbody>
+    </table>
+    </f:entry>
+
+</j:jelly>
