@@ -6,10 +6,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.HashMap;
 
-// Used for dev
-import java.util.Enumeration;
-import java.net.*;
-
 import net.sf.json.JSONException;
 import net.sf.json.JSONSerializer;
 import net.sf.json.JSONObject;
@@ -42,25 +38,6 @@ public class RedlineApi {
     
     this.apiKey = apiKey;
 
-    // TODO DEV CLEANUP
-    if ( baseApiUri == "lookup" ) { 
-      try {     
-      	// Pick off en0 ip Address
-      	NetworkInterface intf = NetworkInterface.getByName( "en0" );
-      	for ( Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-      		InetAddress addr = enumIpAddr.nextElement();
-      		if ( addr instanceof Inet4Address ) {
-  		    	baseUri = "http://" + addr.getHostAddress() + ":8000/";
-  		    	baseApiUri = "http://" + addr.getHostAddress() + ":8000/api/";
-      			break;
-      		}
-      	}
-      	
-      	logger.println( "Using baseApiUri ("+ baseApiUri +")" );
-      } catch ( SocketException uhE ) { 
-        logger.println( "Unknown Host Exception" + uhE );
-      }      
-    }    
   }
 
 	/**

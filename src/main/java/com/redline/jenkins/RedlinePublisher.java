@@ -67,7 +67,6 @@ public class RedlinePublisher extends Notifier {
   // TODO Add Override Variables.
   
   private PrintStream logger;
-  PrintStream log = new PrintStream(System.out);
 	
 	@DataBoundConstructor
 	public RedlinePublisher( String apiKey,
@@ -193,7 +192,6 @@ public class RedlinePublisher extends Notifier {
 	 */
 	private Result validateParameters(PrintStream logger) {
 
-		log.println( "Redline13:validateParameters" );
 		Result result = Result.SUCCESS;
 		
 		if (errorUnstableThreshold >= 0 && errorUnstableThreshold <= 100.0) {
@@ -240,7 +238,6 @@ public class RedlinePublisher extends Notifier {
 	}
 	
 	public String getApiKey() {
-		log.println( "Redline13:getApiKey" );
 		return apiKey;
 	}
 	
@@ -261,12 +258,10 @@ public class RedlinePublisher extends Notifier {
 	}
 	
 	public double getErrorFailedThreshold() {
-		log.println( "Redline13:getErrorFailedThreshold" );
 		return errorFailedThreshold;
 	}
 	
 	public void setErrorFailedThreshold(double errorFailedThreshold) {
-		log.println( "Redline13:setErrorFailedThreshold" );
 		this.errorFailedThreshold = Math.max(0, Math.min(errorFailedThreshold, 100.0));
 	}
 	
@@ -279,18 +274,15 @@ public class RedlinePublisher extends Notifier {
 	}
 	
 	public String getTemplateId() {
-		log.println( "Redline13:getTemplateId" );
 		return templateId;
 	}
 	
 	public void setTemplateId(String templateId) {
-		log.println( "Redline13:setTemplateId" );
 		this.templateId = templateId;
 	}
 	
 	@Override
   public RedlinePublisherDescriptor getDescriptor() {
-		log.println( "Redline13:getDescriptor-DESCRIPTOR" );
   	return DESCRIPTOR;
   }
 	
