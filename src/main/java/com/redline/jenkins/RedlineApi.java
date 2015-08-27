@@ -27,7 +27,7 @@ public class RedlineApi {
 
 	/** Helper for Debug, TODO kill */
   PrintStream logger = new PrintStream(System.out);
-  
+
   /** API Key for this test or Request */
   String apiKey;
 
@@ -35,7 +35,7 @@ public class RedlineApi {
 	 * Construct with API Key
 	 */
   public RedlineApi( String apiKey ) {
-    
+
     this.apiKey = apiKey;
 
   }
@@ -44,71 +44,71 @@ public class RedlineApi {
 	 * Check the API Key by validating against the system status check.
 	 */
 	public boolean isValidApiKey() {
-	
+
 		if ( apiKey == null || apiKey.trim().isEmpty() ) {
 			return false;
 		}
-	
+
 		Result result = doRequest( new HttpGet(), "status" );
-		if ( result.isFail() ) { 
+		if ( result.isFail() ) {
 			return false;
 		}
-		
+
 		return true;
 
 	}
 
 	/**
-	 * Call api to get list of Jenkins accessible tests. 
+	 * Call api to get list of Jenkins accessible tests.
 	 */
   public Map<String, String> getTemplateList() {
-		
-		Result result = doRequest( new HttpGet(), "templates" ); 
-		if ( result.isFail() ) { 
+
+		Result result = doRequest( new HttpGet(), "templates" );
+		if ( result.isFail() ) {
 			return null;
 		}
 
 		JSONArray list = null;
 		try {
-			list = (JSONArray) JSONSerializer.toJSON( result.body );			
+			list = (JSONArray) JSONSerializer.toJSON( result.body );
 		} catch (RuntimeException ex) {
 			logger.println("Got Exception: " + ex);
 			return null;
 		}
-		
+
 		if (list == null) {
 			return null;
 		}
-		
+
 		 Map<String, String> tests = new HashMap<String, String>();
 		for (Object test : list) {
 			JSONObject t = (JSONObject) test;
-			tests.put( t.getString("test_api_key"), t.getString("load_test_desc"));
+			tests.put( t.getString("test_api_key"), t.getString("load_test_name"));
 		}
-		
+
 		return tests;
   }
 
 	/**
-	 * Get test information for a specific test. 
+	 * Get test information for a specific test.
 	 * @return The TEMPLATE with full details
 	 */
 	public RedlineTest getTemplate( String templateId ) {
-	
+
 		Result result = doRequest( new HttpGet(), "template/" + templateId );
 		if (result.isFail()) {
 			return null;
 		}
-		
+
 		try {
 			JSONObject json = (JSONObject) JSONSerializer.toJSON( result.body );
 			return new RedlineTest( json );
-			
+
 		} catch (RuntimeException ex) {
-			
+
 			logger.format("Got exception: %s", ex);
 			return null;
-		
+
 		}
 	}
 
@@ -117,48 +117,48 @@ public class RedlineApi {
 	 * @return The RUNNING test object
 	 */
 	public RedlineTest runTemplate( String templateId ) {
-	
-		Result result = doRequest( new HttpPost(), "template/" + templateId );		
+
+		Result result = doRequest( new HttpPost(), "template/" + templateId );
 		if (result.isFail()) {
 			return null;
 		}
-		
+
 		//TODO: check on exception
 		JSONObject json = (JSONObject) JSONSerializer.toJSON( result.body );
 		return new RedlineTest(json);
-		
+
 	}
 
 	/**
-	 * Get test information for a specific test. 
+	 * Get test information for a specific test.
 	 */
 	public RedlineTest getTestStatus( RedlineTest test ) {
-	
+
 		int testId = test.getTestId();
 		String reference = test.getReferenceId();
-		
+
 		Result result = doRequest( new HttpGet(), "teststatus/" + testId + "/" + reference );
 		if (result.isFail()) {
 			logger.println( "Failed teststatus/" + testId + "/" + reference );
 			return null;
 		}
-		
+
 		try {
-		
+
 			JSONObject json = (JSONObject) JSONSerializer.toJSON( result.body );
 			return new RedlineTest( json );
-			
+
 		} catch (RuntimeException ex) {
-			
+
 			logger.format("Exception JSONSerializer: %s", ex);
 			return null;
-		
+
 		}
 	}
 
 	/**
 	 * Gets as much information about the test as it can
-	 * This can include stats details as well if available. 
+	 * This can include stats details as well if available.
 	 */
 	public RedlineTest getTestSummary( RedlineTest test ) {
 
@@ -169,17 +169,17 @@ public class RedlineApi {
 		if (result.isFail()) {
 			return null;
 		}
-		
+
 		try {
-		
+
 			JSONObject json = (JSONObject) JSONSerializer.toJSON( result.body );
 			return new RedlineTest( json );
-			
+
 		} catch (RuntimeException ex) {
-			
+
 			logger.format("Exception JSONSerializer: %s", ex);
 			return null;
-		
+
 		}
 	}
 
@@ -189,43 +189,43 @@ public class RedlineApi {
 	 * @return Response
 	 */
   private Result doRequest( HttpRequestBase request, String path) {
-  
-		URI fullUri = null;		
+
+		URI fullUri = null;
 		try {
 			fullUri = new URI( baseApiUri + path );
 		} catch (java.net.URISyntaxException ex) {
 			throw new RuntimeException("Incorrect URI format: %s", ex);
 		}
-		
+
 		request.setURI(fullUri);
 		request.addHeader("Content-Type", "application/json");
 		request.addHeader("X-Redline-Source", "Jenkins" );
 		request.addHeader("X-Redline-Auth", apiKey);
-		
+
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpResponse response;
   	Result result = null;
-		
+
 		try {
 			response = client.execute(request);
 			result = new Result(response);
-			
+
 		} catch (IOException ex) {
-  		
+
 			logger.format("Error during remote call to API. Exception received: %s", ex);
 			ex.printStackTrace( logger );
 
 			return new Result("Network error during remote call to API");
 		}
-		
+
 		return result;
   }
 
-	/** 
+	/**
 	 * Class to wrap the Response Results from API
 	 */
   static class Result {
-  
+
 	  public int code;
 	  public String errorMessage;
 	  public String body;
@@ -246,7 +246,7 @@ public class RedlineApi {
         code = -1;
         errorMessage = badResponseError;
 	    }
-	    
+
 	    if (code != 200) {
         errorMessage = getErrorFromJson(body);
 	    }
@@ -260,7 +260,7 @@ public class RedlineApi {
 	  }
 
     /**
-     * Extract error from JSON message 
+     * Extract error from JSON message
      * {"message":"error","errors":["wrong api key(xxx)"]}
      */
     private String getErrorFromJson(String json) {
