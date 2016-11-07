@@ -1,0 +1,50 @@
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="Number of Servers" field="numberServers">
+        <f:number default="1"/>
+    </f:entry>
+
+    <f:entry title="EC2 Location" field="location">
+        <f:select default="us-east-1"/>
+    </f:entry>
+
+    <f:entry title="EC2 Size" field="size">
+        <f:select default="m3.medium"/>
+    </f:entry>
+
+    <f:optionalBlock field="useSpot" title="Use Spot Instances?" checked="${useSpot}" default="false" inline="true">
+        <f:entry title="Max cost for spot instances." field="maxPrice" >
+            <f:number/>
+        </f:entry>
+    </f:optionalBlock>
+
+    <f:entry title="EC2 Volume Size" field="volumeSize">
+        <f:number default="8"/>
+    </f:entry>             
+
+    <f:entry title="Subnet ID" field="subnetId">
+        <f:textbox />
+    </f:entry>             
+    <f:entry title="Security Group IDs" field="securityGroupIds">
+        <f:textbox />
+    </f:entry>       
+    <f:description>
+        To include multiple security groups, separate groups with a comma. 
+        If not set, the default security group is used.
+    </f:description>      
+    <f:entry title="Associate Public IP Address" field="associatePublicIpAddress">
+        <f:checkbox default="true"/>
+    </f:entry>             
+    <f:description>
+        If you're subnet has a route to an internet gateway, 
+        you should check this box. If the instance will be going 
+        through a NAT server, do NOT check this box.
+    </f:description>
+    <f:entry>
+        <div align="right">
+            <f:repeatableDeleteButton />
+        </div>
+    </f:entry>
+</j:jelly>

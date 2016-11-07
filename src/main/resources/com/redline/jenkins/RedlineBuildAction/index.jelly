@@ -1,9 +1,9 @@
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
 	<l:layout css="/plugin/loaderio-jenkins-plugin/css/css.css">
 
-		<st:include it="${it.owner}" page="sidepanel.jelly" from="${it.owner}" />
+		<st:include it="${it.run}" page="sidepanel.jelly" from="${it.run}" />
 		<l:main-panel>
 			<h1><a href="http://redline13.com" target="_blank">${%Redline13 LoadTest Report}</a></h1>
 			<br/>
