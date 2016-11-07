@@ -15,78 +15,100 @@ import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-
 public class RedlineCredentialImpl extends RedlineCredentialAbstract {
 
-	/** Serialization */
-	private static final long serialVersionUID = 1L;
-	
-	/** ApiKey */
-	private final Secret apiKey;
-	
-	/** Description */
-  private final String description;
-
-  @DataBoundConstructor
-  public RedlineCredentialImpl( String apiKey, String description ) {
-	  this.apiKey = Secret.fromString(apiKey);
-	  this.description = description;
-  }
-
-  public String getDescription() {
-	  return description;
-  }
-
-	public Secret getApiKey() {
-	  return apiKey;
-	}
-
-  @Extension
-  public static class DescriptorImpl extends CredentialsDescriptor {
+    /**
+     * Serialization
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
-     * {@inheritDoc}
+     * ApiKey
      */
-    @Override
-    public String getDisplayName() {
-        return Messages.RedlineCredential_DisplayName();
+    private final Secret apiKey;
+
+    /**
+     * Description
+     */
+    private final String description;
+
+    /**
+     * RedlineCredentialImpl Constructor
+     * @param apiKey ApiKey to store for credential
+     * @param description Optional description for key
+     */
+    @DataBoundConstructor
+    public RedlineCredentialImpl(String apiKey, String description) {
+        this.apiKey = Secret.fromString(apiKey);
+        this.description = description;
     }
 
-    @Override
-    public ListBoxModel doFillScopeItems() {
-      ListBoxModel m = new ListBoxModel();
-      m.add(CredentialsScope.GLOBAL.getDisplayName(), CredentialsScope.GLOBAL.toString());
-      return m;
+    public String getDescription() {
+        return description;
     }
 
-		/** 
-		 * Used by global jelly to authenticate user 
-		 */
-    public FormValidation doTestConnection( @QueryParameter("apiKey") final String apiKey ) 
-    		throws MessagingException, IOException, JSONException, ServletException {
-    	return checkApiKey(apiKey);
-    }
-        
-		/** 
-		 * Used by global jelly to authenticate user, but in the case of an update. 
-		 */
-    public FormValidation doTestExistedConnection(@QueryParameter("apiKey") final Secret apiKey) 
-    		throws MessagingException, IOException, JSONException, ServletException {
-      return checkApiKey(apiKey.getPlainText());
+    public Secret getApiKey() {
+        return apiKey;
     }
 
-    private FormValidation checkApiKey( final String apiKey ) 
-    		throws JSONException, IOException, ServletException {
+    @Extension
+    public static class DescriptorImpl extends CredentialsDescriptor {
 
-    	RedlineApi api = new RedlineApi( apiKey );
-      if (api.isValidApiKey()) {
-          return FormValidation.ok("Your API Key is good.");
-      } else {
-          return FormValidation.errorWithMarkup("API Key is not valid.");
-      }
-      
+        /**
+         * {@inheritDoc}
+         * @return Get Display name
+         */
+        @Override
+        public String getDisplayName() {
+            return Messages.RedlineCredential_DisplayName();
+        }
+
+        @Override
+        public ListBoxModel doFillScopeItems() {
+            ListBoxModel m = new ListBoxModel();
+            m.add(CredentialsScope.GLOBAL.getDisplayName(), CredentialsScope.GLOBAL.toString());
+            return m;
+        }
+
+        /**
+         * Used by global jelly to authenticate user
+         * @param apiKey API Key to test
+         * @return If the form is valid.
+         * @throws javax.mail.MessagingException Messaging layer
+         * @throws java.io.IOException Issues with connecting with service
+         * @throws javax.servlet.ServletException thrown in the chain
+         */
+        public FormValidation doTestConnection(@QueryParameter("apiKey") final String apiKey)
+                throws MessagingException, IOException, JSONException, ServletException {
+            return checkApiKey(apiKey);
+        }
+
+        /**
+         * Used by global jelly to authenticate user, but in the case of an
+         * update.
+         * @param apiKey API Key to test
+         * @return If the form is valid.
+         * @throws javax.mail.MessagingException Messaging layer
+         * @throws java.io.IOException Issues with connecting with service
+         * @throws javax.servlet.ServletException thrown in the chain
+         */
+        public FormValidation doTestExistedConnection(@QueryParameter("apiKey") final Secret apiKey)
+                throws MessagingException, IOException, JSONException, ServletException {
+            return checkApiKey(apiKey.getPlainText());
+        }
+
+        private FormValidation checkApiKey(final String apiKey)
+                throws JSONException, IOException, ServletException {
+
+            RedlineApi api = new RedlineApi(apiKey);
+            if (api.isValidApiKey()) {
+                return FormValidation.ok("Your API Key is good.");
+            } else {
+                return FormValidation.errorWithMarkup("API Key is not valid.");
+            }
+
+        }
+
     }
 
-  }
-    
 }
