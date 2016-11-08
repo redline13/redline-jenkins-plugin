@@ -45,9 +45,9 @@ public class GatlingStepExecution extends AbstractSynchronousNonBlockingStepExec
                 step.getName(), 
                 step.getDesc(), 
                 step.getStoreOutput(),
-                step.getGatlingFile(),
+                step.getMasterFile(),
                 step.getExtraFiles(),
-                step.getGatlingVersion(),
+                step.getVersion(),
                 step.getOpts(), 
                 step.getServers(),
                 step.getThresholds()

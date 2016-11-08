@@ -24,10 +24,10 @@ public class JMeterStep extends AbstractStepImpl {
     public String name;
     public String desc;
     public Boolean storeOutput;
-    public String jmeterFile;
+    public String masterFile;
     public ExtraFile[] extraFiles;
     public Servers[] servers;
-    private final String jmeterVersion;
+    private final String version;
     private final String opts;
     private final String jvmArgs;
     public Thresholds thresholds;
@@ -37,9 +37,9 @@ public class JMeterStep extends AbstractStepImpl {
             String name,
             String desc,
             Boolean storeOutput,
-            String jmeterFile,
+            String masterFile,
             ExtraFile[] extraFiles,
-            String jmeterVersion,
+            String version,
             String opts,
             String jvmArgs,
             Servers[] servers,
@@ -48,10 +48,10 @@ public class JMeterStep extends AbstractStepImpl {
         this.name = name;
         this.desc = desc;
         this.storeOutput = storeOutput;
-        this.jmeterFile = jmeterFile;
+        this.masterFile = masterFile;
         this.extraFiles = extraFiles;
         this.servers = servers;
-        this.jmeterVersion = jmeterVersion;
+        this.version = version;
         this.opts = opts;
         this.jvmArgs = jvmArgs;
         this.thresholds = thresholds;
@@ -69,8 +69,8 @@ public class JMeterStep extends AbstractStepImpl {
         return storeOutput;
     }
 
-    public String getJmeterFile() {
-        return jmeterFile;
+    public String getMasterFile() {
+        return masterFile;
     }
 
     public ExtraFile[] getExtraFiles() {
@@ -84,8 +84,8 @@ public class JMeterStep extends AbstractStepImpl {
         return this.servers;
     }
     
-    public String getJmeterVersion() {
-        return jmeterVersion;
+    public String getVersion() {
+        return version;
     }
 
     public String getOpts() {

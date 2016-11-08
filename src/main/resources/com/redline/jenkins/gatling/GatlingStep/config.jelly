@@ -18,7 +18,7 @@
     </f:description>
     
     <f:section title="Gatling Properties"></f:section>
-    <f:entry title="Gatling File In Project" field="gatlingFile">
+    <f:entry title="Gatling File In Project" field="masterFile">
         <f:textbox />
     </f:entry>
 
@@ -32,7 +32,7 @@
         </f:repeatableProperty>
     </f:entry>
     
-    <f:entry title="Gatling Version to use" field="gatlingVersion" name="gatlingVersion">
+    <f:entry title="Gatling Version to use" field="version" name="version">
         <f:select />
     </f:entry>
     

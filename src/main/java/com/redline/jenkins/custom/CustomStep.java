@@ -24,7 +24,7 @@ public class CustomStep extends AbstractStepImpl {
     public String name;
     public String desc;
     public Boolean storeOutput;
-    public String customFile;
+    public String masterFile;
     public ExtraFile[] extraFiles;
     public Servers[] servers;
     public String language;
@@ -35,7 +35,7 @@ public class CustomStep extends AbstractStepImpl {
             String name,
             String desc,
             Boolean storeOutput,
-            String customFile,
+            String masterFile,
             ExtraFile[] extraFiles,
             String language,
             Servers[] servers,
@@ -44,7 +44,7 @@ public class CustomStep extends AbstractStepImpl {
         this.name = name;
         this.desc = desc;
         this.storeOutput = storeOutput;
-        this.customFile = customFile;
+        this.masterFile = masterFile;
         this.extraFiles = extraFiles;
         this.language = language;
         this.servers = servers;
@@ -63,8 +63,8 @@ public class CustomStep extends AbstractStepImpl {
         return storeOutput;
     }
 
-    public String getCustomFile() {
-        return customFile;
+    public String getMasterFile() {
+        return masterFile;
     }
 
     public ExtraFile[] getExtraFiles() {

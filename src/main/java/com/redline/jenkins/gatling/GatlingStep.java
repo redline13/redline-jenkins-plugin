@@ -24,10 +24,10 @@ public class GatlingStep extends AbstractStepImpl {
     public String name;
     public String desc;
     public Boolean storeOutput;
-    public String gatlingFile;
+    public String masterFile;
     public ExtraFile[] extraFiles;
     public Servers[] servers;
-    private final String gatlingVersion;
+    private final String version;
     private final String opts;
     public Thresholds thresholds;
     
@@ -36,9 +36,9 @@ public class GatlingStep extends AbstractStepImpl {
             String name,
             String desc,
             Boolean storeOutput,
-            String gatlingFile,
+            String masterFile,
             ExtraFile[] extraFiles,
-            String gatlingVersion,
+            String version,
             String opts,
             Servers[] servers,
             Thresholds thresholds
@@ -46,10 +46,10 @@ public class GatlingStep extends AbstractStepImpl {
         this.name = name;
         this.desc = desc;
         this.storeOutput = storeOutput;
-        this.gatlingFile = gatlingFile;
+        this.masterFile = masterFile;
         this.extraFiles = extraFiles;
         this.servers = servers;
-        this.gatlingVersion = gatlingVersion;
+        this.version = version;
         this.opts = opts;
         this.thresholds = thresholds;
     }
@@ -66,8 +66,8 @@ public class GatlingStep extends AbstractStepImpl {
         return storeOutput;
     }
 
-    public String getGatlingFile() {
-        return gatlingFile;
+    public String getMasterFile() {
+        return masterFile;
     }
 
     public ExtraFile[] getExtraFiles() {
@@ -81,8 +81,8 @@ public class GatlingStep extends AbstractStepImpl {
         return this.servers;
     }
     
-    public String getGatlingVersion() {
-        return gatlingVersion;
+    public String getVersion() {
+        return version;
     }
 
     public String getOpts() {

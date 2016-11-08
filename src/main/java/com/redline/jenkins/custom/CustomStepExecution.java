@@ -45,7 +45,7 @@ public class CustomStepExecution extends AbstractSynchronousNonBlockingStepExecu
                 step.getName(), 
                 step.getDesc(), 
                 step.getStoreOutput(),
-                step.getCustomFile(),
+                step.getMasterFile(),
                 step.getExtraFiles(),
                 step.getLanguage(), 
                 step.getServers(),
