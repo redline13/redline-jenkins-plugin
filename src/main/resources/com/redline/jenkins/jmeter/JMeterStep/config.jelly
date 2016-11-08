@@ -54,6 +54,12 @@
     </f:section>
 
     <f:entry>
-        <f:repeatableProperty field="servers" add="Add Cloud Servers" header="CloudSettings" minimum="1"/>
-    </f:entry>    
+        <f:repeatableProperty field="servers" add="Add Cloud Servers" source="jmeter" header="CloudSettings" minimum="1"/>
+    </f:entry>
+
+    <f:section title="Thresholds" />
+    <f:entry field="thresholds">
+        <f:property />
+    </f:entry>
+        
 </j:jelly>

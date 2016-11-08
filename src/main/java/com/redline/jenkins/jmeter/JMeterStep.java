@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.redline.jenkins.steps;
+package com.redline.jenkins.jmeter;
 
 import com.redline.jenkins.ExtraFile;
 import com.redline.jenkins.Servers;
+import com.redline.jenkins.Thresholds;
 import hudson.Extension;
 import hudson.util.ListBoxModel;
 import javax.annotation.Nonnull;
@@ -18,20 +19,21 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author rfriedman
  */
-public class RedlineJMeterStep extends AbstractStepImpl{
+public class JMeterStep extends AbstractStepImpl {
 
-    private final String name;
-    private final String desc;
-    private final Boolean storeOutput;
-    private final String jmeterFile;
-    private final ExtraFile[] extraFiles;
+    public String name;
+    public String desc;
+    public Boolean storeOutput;
+    public String jmeterFile;
+    public ExtraFile[] extraFiles;
+    public Servers[] servers;
     private final String jmeterVersion;
     private final String opts;
     private final String jvmArgs;
-    private final Servers[] servers;
+    public Thresholds thresholds;
     
     @DataBoundConstructor
-    public RedlineJMeterStep(
+    public JMeterStep(
             String name,
             String desc,
             Boolean storeOutput,
@@ -40,17 +42,19 @@ public class RedlineJMeterStep extends AbstractStepImpl{
             String jmeterVersion,
             String opts,
             String jvmArgs,
-            Servers[] servers
+            Servers[] servers,
+            Thresholds thresholds 
     ) {
         this.name = name;
         this.desc = desc;
         this.storeOutput = storeOutput;
         this.jmeterFile = jmeterFile;
         this.extraFiles = extraFiles;
+        this.servers = servers;
         this.jmeterVersion = jmeterVersion;
         this.opts = opts;
         this.jvmArgs = jvmArgs;
-        this.servers = servers;
+        this.thresholds = thresholds;
     }
 
     public String getName() {
@@ -72,6 +76,13 @@ public class RedlineJMeterStep extends AbstractStepImpl{
     public ExtraFile[] getExtraFiles() {
         return extraFiles;
     }
+
+    public Servers[] getServers() {
+        if (servers == null) {
+            return new Servers[0];
+        }
+        return this.servers;
+    }
     
     public String getJmeterVersion() {
         return jmeterVersion;
@@ -85,23 +96,20 @@ public class RedlineJMeterStep extends AbstractStepImpl{
         return jvmArgs;
     }
 
-    public Servers[] getServers() {
-        if (servers == null) {
-            return new Servers[0];
-        }
-        return this.servers;
+    public Thresholds getThresholds(){
+        return this.thresholds;
     }
     
     @Extension
     public static class DescriptorImpl extends AbstractStepDescriptorImpl{
 
         public DescriptorImpl(){
-            super(RedlineJMeterStepExecution.class);
+            super(JMeterStepExecution.class);
         }
         
         @Override
         public String getFunctionName() {
-            return "RedlineJMeter";
+            return "redlineJMeter";
         }
         
         @Nonnull
