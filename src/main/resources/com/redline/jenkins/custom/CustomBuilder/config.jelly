@@ -1,0 +1,52 @@
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:section title="General Properties"></f:section>
+    <f:entry title="Name" field="name">
+        <f:textbox />
+    </f:entry>
+
+    <f:entry title="Description" field="desc">
+        <f:textbox />
+    </f:entry>
+  
+    <f:entry title="Store Output?" field="storeOutput">
+        <f:booleanRadio/>
+    </f:entry>
+    <f:description>
+        This is required to capture logs and outputs from a performance test.
+    </f:description>
+    
+    <f:section title="Custom Test Properties"></f:section>
+    <f:entry title="Custom File In Project" field="masterFile">
+        <f:textbox />
+    </f:entry>
+
+    <f:entry>
+        <f:repeatableProperty field="extraFiles" add="Add Extra Files" minimum="0">
+            <f:entry title="">
+                <div align="right">
+                    <f:repeatableDeleteButton />
+                </div>
+            </f:entry>
+        </f:repeatableProperty>
+    </f:entry>
+
+    <f:entry title="Language of test" field="language" name="language">
+        <f:select />
+    </f:entry>
+    
+    <f:section title="Cloud Properties">
+    </f:section>
+
+    <f:entry>
+        <f:repeatableProperty field="servers" source="custom" add="Add Cloud Servers" header="CloudSettings" minimum="1"/>
+    </f:entry>
+
+    <f:section title="Thresholds" />
+    <f:entry field="thresholds">
+        <f:property />
+    </f:entry>
+
+</j:jelly>
