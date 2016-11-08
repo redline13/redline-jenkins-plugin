@@ -130,6 +130,15 @@ public class RedlineTest {
         }
         return null;
     }
+    
+    public Double getCost(){
+        Double value = 0.0;
+        if ( cost != null && cost.has("data") ){
+            value = cost.getDouble("data") + cost.getDouble("hours") + cost.getDouble("servers");
+            value /= 100;
+        }
+        return value;
+    }
  
     /**
      * Easy Print.
