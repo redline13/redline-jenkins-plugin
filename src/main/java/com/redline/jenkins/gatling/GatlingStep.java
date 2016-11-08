@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.redline.jenkins.steps;
+package com.redline.jenkins.gatling;
 
 import com.redline.jenkins.ExtraFile;
 import com.redline.jenkins.Servers;
+import com.redline.jenkins.Thresholds;
 import hudson.Extension;
 import hudson.util.ListBoxModel;
 import javax.annotation.Nonnull;
@@ -18,39 +19,39 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author rfriedman
  */
-public class RedlineJMeterStep extends AbstractStepImpl{
+public class GatlingStep extends AbstractStepImpl {
 
-    private final String name;
-    private final String desc;
-    private final Boolean storeOutput;
-    private final String jmeterFile;
-    private final ExtraFile[] extraFiles;
-    private final String jmeterVersion;
+    public String name;
+    public String desc;
+    public Boolean storeOutput;
+    public String gatlingFile;
+    public ExtraFile[] extraFiles;
+    public Servers[] servers;
+    private final String gatlingVersion;
     private final String opts;
-    private final String jvmArgs;
-    private final Servers[] servers;
+    public Thresholds thresholds;
     
     @DataBoundConstructor
-    public RedlineJMeterStep(
+    public GatlingStep(
             String name,
             String desc,
             Boolean storeOutput,
-            String jmeterFile,
+            String gatlingFile,
             ExtraFile[] extraFiles,
-            String jmeterVersion,
+            String gatlingVersion,
             String opts,
-            String jvmArgs,
-            Servers[] servers
+            Servers[] servers,
+            Thresholds thresholds
     ) {
         this.name = name;
         this.desc = desc;
         this.storeOutput = storeOutput;
-        this.jmeterFile = jmeterFile;
+        this.gatlingFile = gatlingFile;
         this.extraFiles = extraFiles;
-        this.jmeterVersion = jmeterVersion;
-        this.opts = opts;
-        this.jvmArgs = jvmArgs;
         this.servers = servers;
+        this.gatlingVersion = gatlingVersion;
+        this.opts = opts;
+        this.thresholds = thresholds;
     }
 
     public String getName() {
@@ -65,24 +66,12 @@ public class RedlineJMeterStep extends AbstractStepImpl{
         return storeOutput;
     }
 
-    public String getJmeterFile() {
-        return jmeterFile;
+    public String getGatlingFile() {
+        return gatlingFile;
     }
 
     public ExtraFile[] getExtraFiles() {
         return extraFiles;
-    }
-    
-    public String getJmeterVersion() {
-        return jmeterVersion;
-    }
-
-    public String getOpts() {
-        return opts;
-    }
-
-    public String getJvmArgs() {
-        return jvmArgs;
     }
 
     public Servers[] getServers() {
@@ -92,25 +81,37 @@ public class RedlineJMeterStep extends AbstractStepImpl{
         return this.servers;
     }
     
+    public String getGatlingVersion() {
+        return gatlingVersion;
+    }
+
+    public String getOpts() {
+        return opts;
+    }
+
+    public Thresholds getThresholds(){
+        return this.thresholds;
+    }
+
     @Extension
     public static class DescriptorImpl extends AbstractStepDescriptorImpl{
 
         public DescriptorImpl(){
-            super(RedlineJMeterStepExecution.class);
+            super(GatlingStepExecution.class);
         }
         
         @Override
         public String getFunctionName() {
-            return "RedlineJMeter";
+            return "redlineGatling";
         }
         
         @Nonnull
         @Override
         public String getDisplayName(){
-            return "Run a JMeter load test on RedLine13.com";
+            return "Run a Gatling load test on RedLine13.com";
         }
 
-        public ListBoxModel doFillJmeterVersionItems() {
+        public ListBoxModel doFillGatlingVersionItems() {
             ListBoxModel items = new ListBoxModel();
             items.add("3.0", "3.0");
             items.add("2.13", "2.13");
