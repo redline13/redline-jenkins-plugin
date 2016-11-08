@@ -1,0 +1,58 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:section title="General Properties"></f:section>
+    <f:entry title="Name" field="name">
+        <f:textbox />
+    </f:entry>
+
+    <f:entry title="Description" field="desc">
+        <f:textbox />
+    </f:entry>
+  
+    <f:entry title="Store Output?" field="storeOutput">
+        <f:booleanRadio/>
+    </f:entry>
+    <f:description>
+        This is required to capture logs and outputs from a performance test.
+    </f:description>
+    
+    <f:section title="Gatling Properties"></f:section>
+    <f:entry title="Gatling File In Project" field="masterFile">
+        <f:textbox />
+    </f:entry>
+
+    <f:entry>
+        <f:repeatableProperty field="extraFiles" add="Add Extra Files" minimum="0">
+            <f:entry title="">
+                <div align="right">
+                    <f:repeatableDeleteButton />
+                </div>
+            </f:entry>
+        </f:repeatableProperty>
+    </f:entry>
+
+    <f:entry title="Gatling Version to use" field="gatlingVersion" name="gatlingVersion">
+        <f:select />
+    </f:entry>
+    
+    <f:entry title="Gatling Options" field="opts">
+        <f:textbox />
+    </f:entry>
+    <f:description>
+        Specify Options as -Dkey=value -Dkey=value
+    </f:description>
+    
+    <f:section title="Cloud Properties">
+    </f:section>
+
+    <f:entry>
+        <f:repeatableProperty field="servers" source="gatling" add="Add Cloud Servers" header="CloudSettings" minimum="1"/>
+    </f:entry>
+
+    <f:section title="Thresholds" />
+    <f:entry field="thresholds">
+        <f:property />
+    </f:entry>
+    
+</j:jelly>
