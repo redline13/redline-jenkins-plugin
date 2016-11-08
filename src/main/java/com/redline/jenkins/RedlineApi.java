@@ -64,11 +64,7 @@ public class RedlineApi {
         }
 
         Result result = doRequest(new HttpGet(), "status");
-        if (result.isFail()) {
-            return false;
-        }
-
-        return true;
+        return !result.isFail();
 
     }
 
@@ -84,7 +80,7 @@ public class RedlineApi {
             return null;
         }
 
-        JSONArray list = null;
+        JSONArray list;
         try {
             list = (JSONArray) JSONSerializer.toJSON(result.body);
         } catch (RuntimeException ex) {
@@ -96,7 +92,7 @@ public class RedlineApi {
             return null;
         }
 
-        Map<String, String> tests = new HashMap<String, String>();
+        Map<String, String> tests = new HashMap<>();
         for (Object test : list) {
             JSONObject t = (JSONObject) test;
             tests.put(t.getString("test_api_key"), t.getString("load_test_name"));
@@ -142,6 +138,8 @@ public class RedlineApi {
      * @param extras if extra files are to be attached to custom tests
      * @param servers The meta describing type of servers to use
      * @return Test object
+     * @throws java.io.IOException pass through
+     * @throws java.lang.InterruptedException pass through
      */
     public RedlineTest runTest(
             String testType,
@@ -179,16 +177,17 @@ public class RedlineApi {
         // Send over test specific properties for JMeter, Gatling, Custom, ...
         for (Map.Entry<String, String> entry : testProperties.entrySet()) {
             String value = entry.getValue();
-            if (value != null || value.isEmpty()) {
+            if (value != null && !value.isEmpty()) {
                 meb.addTextBody(entry.getKey(), value);
             }
         }
         // TODOD Figure out Plugin Support
 
-        int totalServers = 0;
+        // total users or servers depdending on test type.
+        int totalUsers = 0;
         // Add Cloud Server settings by iterating over each server object
         for (int i = 0; i < servers.length; i++) {
-            totalServers += servers[i].getNumberServers();
+            totalUsers += (servers[i].getNumberServers()*servers[i].getUsersPerServer());
 
             String server = "servers[" + i + "]";
             meb.addTextBody(server + "[num]", Integer.toString(servers[i].getNumberServers()));
@@ -208,10 +207,10 @@ public class RedlineApi {
                 meb.addTextBody(server + "[securityGroupIds]", servers[i].getSecurityGroupIds());
             }
             meb.addTextBody(server + "[associatePublicIpAddress]", servers[i].getAssociatePublicIpAddress() ? "T" : "F");
-            meb.addTextBody(server + "[usersPerServer]", "1");
+            meb.addTextBody(server + "[usersPerServer]", Integer.toString(servers[i].getUsersPerServer()) );
         }
-        // Total # Servers
-        meb.addTextBody("numServers", Integer.toString(totalServers));
+        // Total # Servers or Users depending on test type.
+        meb.addTextBody("numUsers", Integer.toString(totalUsers));
         request.setEntity(meb.build());
 
         // Do the Request
@@ -220,11 +219,6 @@ public class RedlineApi {
             logger.println("Error code was " + result.code);
             return null;
         }
-
-        // Useful for reporting issues and debugging.
-        logger.println( "--- Result Body ---");
-        logger.println(result.body);
-        logger.println("---------");
 
         // Read in JSON and get data into a test object.
         JSONObject json = (JSONObject) JSONSerializer.toJSON(result.body);
@@ -317,9 +311,6 @@ public class RedlineApi {
         if (result.isFail()) {
             return null;
         }
-        logger.println( "--- Result Body ---");
-        logger.println(result.body);
-        logger.println("---------");
 
         try {
 
@@ -343,10 +334,8 @@ public class RedlineApi {
     private Result doRequest(HttpRequestBase request, String path) {
 
         if (path != null) {
-            URI fullUri = null;
             try {
-                fullUri = new URI(baseApiUri + path);
-                request.setURI(fullUri);
+                request.setURI(new URI(baseApiUri + path));
             } catch (java.net.URISyntaxException ex) {
                 throw new RuntimeException("Incorrect URI format: %s", ex);
             }
@@ -377,6 +366,11 @@ public class RedlineApi {
                 // Do nothing.
             }
         }
+        
+        // Useful for reporting issues and debugging.
+        logger.println( "--- Result Body ---");
+        logger.println(result.body);
+        logger.println("---------");
 
         return result;
     }
