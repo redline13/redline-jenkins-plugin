@@ -17,6 +17,7 @@ public class Servers extends AbstractDescribableImpl<Servers> {
     public String subnetId = null;
     public Boolean associatePublicIpAddress = true;
     public String securityGroupIds;
+    public Integer usersPerServer;
 
     /**
      * Gather all the inputs required to define cloud settings data to launch
@@ -25,6 +26,7 @@ public class Servers extends AbstractDescribableImpl<Servers> {
      * @param location AWS EC2 Location (Default us-east-1)
      * @param size AWS EC2 Size (Default m3.medium)
      * @param numberServers Number of servers to launch, default 1
+     * @param usersPerServer Users per server for custom tests
      * @param useSpot On Demand or Spot Pricing Default F
      * @param maxPrice For Spot pricing
      * @param volumeSize Disk Size, default 8GB
@@ -37,6 +39,7 @@ public class Servers extends AbstractDescribableImpl<Servers> {
             String location,
             String size,
             Integer numberServers,
+            Integer usersPerServer,
             Boolean useSpot,
             Double maxPrice,
             Integer volumeSize,
@@ -46,6 +49,7 @@ public class Servers extends AbstractDescribableImpl<Servers> {
         this.location = location;
         this.size = size;
         this.numberServers = numberServers;
+        this.usersPerServer = usersPerServer;
         this.useSpot = useSpot;
         this.maxPrice = maxPrice;
         this.volumeSize = volumeSize;
@@ -63,7 +67,17 @@ public class Servers extends AbstractDescribableImpl<Servers> {
     }
 
     public Integer getNumberServers() {
+        if ( numberServers == null ){
+            return 1;
+        }
         return numberServers;
+    }
+    
+    public Integer getUsersPerServer(){
+        if ( usersPerServer == null ){
+            return 1;
+        }
+        return usersPerServer;
     }
 
     public Boolean getUseSpot() {
@@ -89,6 +103,7 @@ public class Servers extends AbstractDescribableImpl<Servers> {
     public String getSecurityGroupIds() {
         return securityGroupIds;
     }
+    
 
     @Extension
     public static class DescriptorImpl extends Descriptor<Servers> {
