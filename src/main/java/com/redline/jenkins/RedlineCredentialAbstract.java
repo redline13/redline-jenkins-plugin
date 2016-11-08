@@ -5,11 +5,11 @@ import com.cloudbees.plugins.credentials.CredentialsScope;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Implements the RedlineCredential, exposingthe implement of the fields. 
+ * Implements the RedlineCredential, exposing the implement of the fields.
  */
 public abstract class RedlineCredentialAbstract extends BaseCredentials implements RedlineCredential {
 
-	protected RedlineCredentialAbstract() {
+    protected RedlineCredentialAbstract() {
         super(CredentialsScope.GLOBAL);
     }
 
@@ -17,11 +17,11 @@ public abstract class RedlineCredentialAbstract extends BaseCredentials implemen
         super(scope);
     }
 
-		/**
-		 * Display for the API Key in the UI. 
-		 */
+    /**
+     * Display for the API Key in the UI.
+     */
     public String getId() {
         final String apiKey = getApiKey().getPlainText();
-        return StringUtils.left(apiKey,4) + "..." + StringUtils.right(apiKey, 4);
+        return StringUtils.left(apiKey, 4) + "..." + StringUtils.right(apiKey, 4);
     }
 }
