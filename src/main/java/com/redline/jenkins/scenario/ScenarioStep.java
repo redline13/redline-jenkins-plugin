@@ -1,48 +1,67 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.redline.jenkins.scenario;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.redline.jenkins.RedlineApi;
-import com.redline.jenkins.RedlineBuilder;
 import com.redline.jenkins.RedlineCredential;
 import com.redline.jenkins.Thresholds;
+import hudson.Extension;
+import hudson.security.ACL;
+import hudson.util.ListBoxModel;
 import java.util.List;
 import java.util.Map;
-
+import javax.annotation.Nonnull;
 import jenkins.model.Jenkins;
-
-import hudson.Extension;
-import hudson.model.AbstractProject;
-import hudson.security.ACL;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
-import hudson.util.ListBoxModel;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * Build task for executing a scenario.
+ *
+ * @author rfriedman
  */
-public class ScenarioBuilder extends RedlineBuilder {
+public class ScenarioStep extends AbstractStepImpl {
+
+    public String templateId;
+    public Thresholds thresholds;
     
     @DataBoundConstructor
-    public ScenarioBuilder(
+    public ScenarioStep(
             String templateId,
-            Thresholds thresholds
+            Thresholds thresholds 
     ) {
         this.templateId = templateId;
         this.thresholds = thresholds;
     }
 
+    public String getTemplateId() {
+        return templateId;
+    }
+    
+    public Thresholds getThresholds(){
+        return this.thresholds;
+    }
+
     @Extension
-    public static class DescriptorImpl extends BuildStepDescriptor<Builder>{
+    public static class DescriptorImpl extends AbstractStepDescriptorImpl{
 
-        @Override
-        public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return true;
+        public DescriptorImpl(){
+            super(ScenarioStepExecution.class);
         }
-
+        
         @Override
-        public String getDisplayName() {
-            return "Redline13 Scenario";
+        public String getFunctionName() {
+            return "redlineScenario";
+        }
+        
+        @Nonnull
+        @Override
+        public String getDisplayName(){
+            return "Run existing templates on RedLine13.com";
         }
 
         /**
@@ -88,7 +107,5 @@ public class ScenarioBuilder extends RedlineBuilder {
             // API key is not valid any more
             return null;
         }
-
     }
-
 }

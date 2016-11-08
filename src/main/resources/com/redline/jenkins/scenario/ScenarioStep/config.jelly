@@ -11,9 +11,8 @@
       <f:select />
     </f:entry>
 
-    <f:entry field="thresholds">
+    <f:entry title="Thresholds" field="thresholds">
         <f:property />
     </f:entry>
-        
     
 </j:jelly>
