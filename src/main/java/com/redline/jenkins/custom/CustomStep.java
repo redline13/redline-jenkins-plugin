@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.redline.jenkins.steps;
+package com.redline.jenkins.custom;
 
 import com.redline.jenkins.ExtraFile;
 import com.redline.jenkins.Servers;
+import com.redline.jenkins.Thresholds;
 import hudson.Extension;
 import hudson.util.ListBoxModel;
 import javax.annotation.Nonnull;
@@ -18,39 +19,36 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author rfriedman
  */
-public class RedlineJMeterStep extends AbstractStepImpl{
+public class CustomStep extends AbstractStepImpl {
 
-    private final String name;
-    private final String desc;
-    private final Boolean storeOutput;
-    private final String jmeterFile;
-    private final ExtraFile[] extraFiles;
-    private final String jmeterVersion;
-    private final String opts;
-    private final String jvmArgs;
-    private final Servers[] servers;
+    public String name;
+    public String desc;
+    public Boolean storeOutput;
+    public String customFile;
+    public ExtraFile[] extraFiles;
+    public Servers[] servers;
+    public String language;
+    public Thresholds thresholds;
     
     @DataBoundConstructor
-    public RedlineJMeterStep(
+    public CustomStep(
             String name,
             String desc,
             Boolean storeOutput,
-            String jmeterFile,
+            String customFile,
             ExtraFile[] extraFiles,
-            String jmeterVersion,
-            String opts,
-            String jvmArgs,
-            Servers[] servers
+            String language,
+            Servers[] servers,
+            Thresholds thresholds
     ) {
         this.name = name;
         this.desc = desc;
         this.storeOutput = storeOutput;
-        this.jmeterFile = jmeterFile;
+        this.customFile = customFile;
         this.extraFiles = extraFiles;
-        this.jmeterVersion = jmeterVersion;
-        this.opts = opts;
-        this.jvmArgs = jvmArgs;
+        this.language = language;
         this.servers = servers;
+        this.thresholds = thresholds;
     }
 
     public String getName() {
@@ -65,55 +63,52 @@ public class RedlineJMeterStep extends AbstractStepImpl{
         return storeOutput;
     }
 
-    public String getJmeterFile() {
-        return jmeterFile;
+    public String getCustomFile() {
+        return customFile;
     }
 
     public ExtraFile[] getExtraFiles() {
         return extraFiles;
     }
+
+    public String getLanguage() {
+        return language;
+    }
     
-    public String getJmeterVersion() {
-        return jmeterVersion;
-    }
-
-    public String getOpts() {
-        return opts;
-    }
-
-    public String getJvmArgs() {
-        return jvmArgs;
-    }
-
     public Servers[] getServers() {
         if (servers == null) {
             return new Servers[0];
         }
         return this.servers;
     }
+
+    public Thresholds getThresholds() {
+        return thresholds;
+    }
     
     @Extension
     public static class DescriptorImpl extends AbstractStepDescriptorImpl{
 
         public DescriptorImpl(){
-            super(RedlineJMeterStepExecution.class);
+            super(CustomStepExecution.class);
         }
         
         @Override
         public String getFunctionName() {
-            return "RedlineJMeter";
+            return "redlineCustom";
         }
         
         @Nonnull
         @Override
         public String getDisplayName(){
-            return "Run a JMeter load test on RedLine13.com";
+            return "Run a Custom load test on RedLine13.com";
         }
 
-        public ListBoxModel doFillJmeterVersionItems() {
+        public ListBoxModel doFillLanguageItems() {
             ListBoxModel items = new ListBoxModel();
-            items.add("3.0", "3.0");
-            items.add("2.13", "2.13");
+            items.add("php", "php");
+            items.add("nodejs", "nodejs");
+            items.add("python", "python");
             return items;
         }        
     }

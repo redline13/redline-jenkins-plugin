@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.redline.jenkins.steps;
+package com.redline.jenkins.custom;
 
-import com.redline.jenkins.RedlineJMeterBuilder;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -19,7 +18,7 @@ import javax.inject.Inject;
  *
  * @author rfriedman
  */
-public class RedlineJMeterStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
+public class CustomStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
     @StepContextParameter
     private transient TaskListener listener;
@@ -37,21 +36,21 @@ public class RedlineJMeterStepExecution extends AbstractSynchronousNonBlockingSt
     private transient EnvVars env;
     
     @Inject
-    private transient RedlineJMeterStep step;
+    private transient CustomStep step;
 
     @Override
     protected Void run() throws Exception {
-        listener.getLogger().println("Running JMeter Build Step.("+step.getName()+")");
-        RedlineJMeterBuilder builder = new RedlineJMeterBuilder(
+        listener.getLogger().println("Running Custom Build Step.("+step.getName()+")");
+        CustomBuilder builder = new CustomBuilder(
                 step.getName(), 
                 step.getDesc(), 
                 step.getStoreOutput(),
-                step.getJmeterFile(),
+                step.getCustomFile(),
                 step.getExtraFiles(),
-                step.getJmeterVersion(),
-                step.getOpts(), 
-                step.getJvmArgs(),
-                step.getServers());
+                step.getLanguage(), 
+                step.getServers(),
+                step.getThresholds()
+        );
         builder.perform(build, ws, launcher, listener);
         return null;
     }
