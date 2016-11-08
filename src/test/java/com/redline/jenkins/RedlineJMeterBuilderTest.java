@@ -5,6 +5,7 @@
  */
 package com.redline.jenkins;
 
+import com.redline.jenkins.jmeter.JMeterBuilder;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class RedlineJMeterBuilderTest {
 
         // Given
         String name = "How Now!";
-        RedlineJMeterBuilder builder = new RedlineJMeterBuilder(null, name, Boolean.TRUE, null, null, null, null, null, null);
+        JMeterBuilder builder = new JMeterBuilder(null, name, Boolean.TRUE, null, null, null, null, null, null);
         FreeStyleProject p = r.createFreeStyleProject();
         p.getBuildersList().add(builder);
 
