@@ -18,7 +18,6 @@ import hudson.tasks.Builder;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.HashMap;
 import jenkins.tasks.SimpleBuildStep;
 
@@ -169,7 +168,7 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
         }
 
         // Just polling for results.
-        logger.println(" Waiting for test results - Sleeping for 5 seconds ");
+        logger.println(" Waiting for test results - Sleeping for 15 seconds ");
         Thread.sleep(15000);
 
         // Sleep around waiting for test (TODO Async)
