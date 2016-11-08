@@ -51,6 +51,7 @@ public class CustomBuilder extends RedlineBuilder {
     @Override
     public HashMap<String, String> buildTestProperties() {
         HashMap<String, String> map = new HashMap<>();
+        map.put("lang", language);
         return map;
     }
 
