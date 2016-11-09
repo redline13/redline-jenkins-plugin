@@ -1,7 +1,6 @@
 package com.redline.jenkins.jmeter;
 
 import com.redline.jenkins.ExtraFile;
-import com.redline.jenkins.Messages;
 import com.redline.jenkins.RedlineBuilder;
 import com.redline.jenkins.Servers;
 import com.redline.jenkins.Thresholds;
