@@ -1,24 +1,33 @@
 package com.redline.jenkins;
 
 import hudson.FilePath;
+import hudson.ProxyConfiguration;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
 import java.util.HashMap;
+import jenkins.model.Jenkins;
 
 import net.sf.json.JSONException;
 import net.sf.json.JSONSerializer;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSON;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -344,7 +353,33 @@ public class RedlineApi {
         request.addHeader("X-Redline-Source", "Jenkins");
         request.addHeader("X-Redline-Auth", apiKey);
 
-        CloseableHttpClient client = HttpClients.createDefault();
+        CloseableHttpClient client = null;
+
+        ProxyConfiguration proxyConfig = Jenkins.getInstance().proxy;
+        if( proxyConfig != null ){
+            Proxy proxy = proxyConfig.createProxy("www.redline13.com");
+            if ( proxy != null && proxy.type() == Proxy.Type.HTTP ){
+                
+                if ( proxyConfig.getUserName() != null ){
+                    CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                    credsProvider.setCredentials(
+                        new AuthScope(proxyConfig.name, proxyConfig.port ),
+                        new UsernamePasswordCredentials(proxyConfig.getUserName(), proxyConfig.getPassword()));                    
+                    client = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
+                }
+                
+                HttpHost httpProxy = new HttpHost(proxyConfig.name, proxyConfig.port, "http");
+                RequestConfig config = RequestConfig.custom()
+                    .setProxy(httpProxy)
+                    .build();
+                request.setConfig(config);
+                logger.println( "--- PROXY DEBUG >> " + proxy.toString() );
+            }
+        }
+
+        if ( client == null ) {
+            client = HttpClients.createDefault();
+        }
 
         CloseableHttpResponse response;
         Result result;
@@ -368,9 +403,9 @@ public class RedlineApi {
         }
         
         // Useful for reporting issues and debugging.
-        logger.println( "--- Result Body ---");
-        logger.println(result.body);
-        logger.println("---------");
+//        logger.println( "--- Result Body ---");
+//        logger.println(result.body);
+//        logger.println("---------");
 
         return result;
     }

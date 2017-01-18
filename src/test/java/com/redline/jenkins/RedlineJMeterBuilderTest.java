@@ -41,7 +41,7 @@ public class RedlineJMeterBuilderTest {
 
         // Given
         String name = "How Now!";
-        JMeterBuilder builder = new JMeterBuilder(null, name, Boolean.TRUE, null, null, null, null, null, null);
+        JMeterBuilder builder = new JMeterBuilder(null, name, Boolean.TRUE, null, null, null, null, null, null, null);
         FreeStyleProject p = r.createFreeStyleProject();
         p.getBuildersList().add(builder);
 
