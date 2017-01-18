@@ -86,6 +86,7 @@ public class JMeterBuilder extends RedlineBuilder {
 
         public ListBoxModel doFillJmeterVersionItems() {
             ListBoxModel items = new ListBoxModel();
+            items.add("3.1", "3.1");
             items.add("3.0", "3.0");
             items.add("2.13", "2.13");
             return items;

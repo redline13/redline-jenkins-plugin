@@ -113,8 +113,8 @@ public class GatlingStep extends AbstractStepImpl {
 
         public ListBoxModel doFillGatlingVersionItems() {
             ListBoxModel items = new ListBoxModel();
-            items.add("3.0", "3.0");
-            items.add("2.13", "2.13");
+            items.add("2.2.0", "2.2.0");
+            items.add("2.1.6", "2.1.6");
             return items;
         }        
     }
