@@ -7,6 +7,7 @@ package com.redline.jenkins;
 
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import hudson.AbortException;
+import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
@@ -156,6 +157,19 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
 
             // Send over test type specific properties as HashMap
             HashMap<String, String> map = this.buildTestProperties();
+
+            // Support expanded values based on build parameters or environment settings
+            if (build instanceof AbstractBuild) {
+                EnvVars env = build.getEnvironment(listener);
+                env.overrideAll(((AbstractBuild) build).getBuildVariables());
+                this.name = env.expand(this.name);
+                this.desc = env.expand(this.desc);
+                if ( map != null ){
+                    for (HashMap.Entry<String, String> entry : map.entrySet()) {
+                        map.put( entry.getKey(), env.expand(entry.getValue()) );
+                    }
+                }
+            }
 
             testInfo = redlineApi.runTest(this.testType, this.name, this.desc, this.storeOutput, master, extraFilePaths, map, this.servers);
         }
