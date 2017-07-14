@@ -146,6 +146,7 @@ public class RedlineApi {
      * @param file filename for the master file jmeter, gatling, custom
      * @param extras if extra files are to be attached to custom tests
      * @param servers The meta describing type of servers to use
+     * @param plugins List plugins needed by name
      * @return Test object
      * @throws java.io.IOException pass through
      * @throws java.lang.InterruptedException pass through
@@ -158,7 +159,8 @@ public class RedlineApi {
             FilePath file,
             FilePath[] extras,
             HashMap<String, String> testProperties,
-            Servers servers[]) throws IOException, InterruptedException {
+            Servers servers[],
+            Plugin plugins[] ) throws IOException, InterruptedException {
 
         // Build up HTTP Post object using multipart builder.
         HttpPost request = new HttpPost(baseApiUri);
@@ -190,7 +192,13 @@ public class RedlineApi {
                 meb.addTextBody(entry.getKey(), value);
             }
         }
-        // TODOD Figure out Plugin Support
+
+        // Add in support for PLUGINS, TODO add in properties for plugins
+        if (plugins != null && plugins.length > 0 ) {
+          for (int i = 0; i < plugins.length; i++) {
+            meb.addTextBody("plugin[" + i + "]", plugins[i].getPlugin());
+          }
+        }
 
         // total users or servers depdending on test type.
         int totalUsers = 0;
@@ -312,7 +320,7 @@ public class RedlineApi {
 
         }
     }
-    
+
     public RedlineTest getTestFiles(RedlineTest test){
         int testId = test.getTestId();
 
@@ -331,7 +339,7 @@ public class RedlineApi {
             logger.format("Exception JSONSerializer: %s", ex);
             return null;
 
-        }        
+        }
     }
 
     /**
@@ -359,15 +367,15 @@ public class RedlineApi {
         if( proxyConfig != null ){
             Proxy proxy = proxyConfig.createProxy("www.redline13.com");
             if ( proxy != null && proxy.type() == Proxy.Type.HTTP ){
-                
+
                 if ( proxyConfig.getUserName() != null ){
                     CredentialsProvider credsProvider = new BasicCredentialsProvider();
                     credsProvider.setCredentials(
                         new AuthScope(proxyConfig.name, proxyConfig.port ),
-                        new UsernamePasswordCredentials(proxyConfig.getUserName(), proxyConfig.getPassword()));                    
+                        new UsernamePasswordCredentials(proxyConfig.getUserName(), proxyConfig.getPassword()));
                     client = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
                 }
-                
+
                 HttpHost httpProxy = new HttpHost(proxyConfig.name, proxyConfig.port, "http");
                 RequestConfig config = RequestConfig.custom()
                     .setProxy(httpProxy)
@@ -401,7 +409,7 @@ public class RedlineApi {
                 // Do nothing.
             }
         }
-        
+
         // Useful for reporting issues and debugging.
 //        logger.println( "--- Result Body ---");
 //        logger.println(result.body);

@@ -34,7 +34,7 @@ public class JMeterStepExecution extends AbstractSynchronousNonBlockingStepExecu
 
     @StepContextParameter
     private transient EnvVars env;
-    
+
     @Inject
     private transient JMeterStep step;
 
@@ -42,19 +42,20 @@ public class JMeterStepExecution extends AbstractSynchronousNonBlockingStepExecu
     protected Void run() throws Exception {
         listener.getLogger().println("Running JMeter Build Step.("+step.getName()+")");
         JMeterBuilder builder = new JMeterBuilder(
-                step.getName(), 
-                step.getDesc(), 
+                step.getName(),
+                step.getDesc(),
                 step.getStoreOutput(),
                 step.getMasterFile(),
                 step.getExtraFiles(),
                 step.getVersion(),
-                step.getOpts(), 
+                step.getOpts(),
                 step.getJvmArgs(),
                 step.getServers(),
-                step.getThresholds()
+                step.getThresholds(),
+                step.getPlugins()
         );
         builder.perform(build, ws, launcher, listener);
         return null;
     }
-    
+
 }

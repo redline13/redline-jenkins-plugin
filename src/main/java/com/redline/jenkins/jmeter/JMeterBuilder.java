@@ -4,6 +4,7 @@ import com.redline.jenkins.ExtraFile;
 import com.redline.jenkins.RedlineBuilder;
 import com.redline.jenkins.Servers;
 import com.redline.jenkins.Thresholds;
+import com.redline.jenkins.Plugin;
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
@@ -35,7 +36,8 @@ public class JMeterBuilder extends RedlineBuilder {
             String opts,
             String jvmArgs,
             Servers[] servers,
-            Thresholds thresholds
+            Thresholds thresholds,
+            Plugin[] plugins
         ) {
         this.name = name;
         this.desc = desc;
@@ -48,6 +50,7 @@ public class JMeterBuilder extends RedlineBuilder {
         this.servers = servers;
         this.thresholds = thresholds;
         this.testType = "jmeter-test";
+        this.plugins = plugins;
     }
 
     public String getJmeterVersion() {
@@ -61,6 +64,7 @@ public class JMeterBuilder extends RedlineBuilder {
     public String getJvmArgs() {
         return jvmArgs;
     }
+
 
     @Override
     public HashMap<String, String> buildTestProperties() {

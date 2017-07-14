@@ -8,6 +8,7 @@ package com.redline.jenkins.jmeter;
 import com.redline.jenkins.ExtraFile;
 import com.redline.jenkins.Servers;
 import com.redline.jenkins.Thresholds;
+import com.redline.jenkins.Plugin;
 import hudson.Extension;
 import hudson.util.ListBoxModel;
 import javax.annotation.Nonnull;
@@ -31,7 +32,8 @@ public class JMeterStep extends AbstractStepImpl {
     private final String opts;
     private final String jvmArgs;
     public Thresholds thresholds;
-    
+    public Plugin[] plugins;
+
     @DataBoundConstructor
     public JMeterStep(
             String name,
@@ -43,7 +45,8 @@ public class JMeterStep extends AbstractStepImpl {
             String opts,
             String jvmArgs,
             Servers[] servers,
-            Thresholds thresholds 
+            Thresholds thresholds,
+            Plugin[] plugins
     ) {
         this.name = name;
         this.desc = desc;
@@ -55,6 +58,7 @@ public class JMeterStep extends AbstractStepImpl {
         this.opts = opts;
         this.jvmArgs = jvmArgs;
         this.thresholds = thresholds;
+        this.plugins = plugins;
     }
 
     public String getName() {
@@ -83,7 +87,7 @@ public class JMeterStep extends AbstractStepImpl {
         }
         return this.servers;
     }
-    
+
     public String getVersion() {
         return version;
     }
@@ -99,19 +103,23 @@ public class JMeterStep extends AbstractStepImpl {
     public Thresholds getThresholds(){
         return this.thresholds;
     }
-    
+
+    public Plugin[] getPlugins(){
+      return this.plugins;
+    }
+
     @Extension
     public static class DescriptorImpl extends AbstractStepDescriptorImpl{
 
         public DescriptorImpl(){
             super(JMeterStepExecution.class);
         }
-        
+
         @Override
         public String getFunctionName() {
             return "redlineJMeter";
         }
-        
+
         @Nonnull
         @Override
         public String getDisplayName(){
@@ -124,6 +132,6 @@ public class JMeterStep extends AbstractStepImpl {
             items.add("3.0", "3.0");
             items.add("2.13", "2.13");
             return items;
-        }        
+        }
     }
 }

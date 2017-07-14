@@ -60,7 +60,7 @@ public class RedlineCredentialImpl extends RedlineCredentialAbstract {
          */
         @Override
         public String getDisplayName() {
-            return Messages.RedlineCredential_DisplayName();
+            return "RedLine13 API Key";
         }
 
         @Override

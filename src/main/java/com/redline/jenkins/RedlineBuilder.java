@@ -37,7 +37,8 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
     public ExtraFile[] extraFiles;
     public Servers[] servers;
     public Thresholds thresholds;
-    
+    public Plugin[] plugins;
+
     public String getName() {
         return name;
     }
@@ -64,15 +65,22 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
         }
         return this.servers;
     }
-    
+
+    public Plugin[] getPlugins() {
+      if(plugins == null){
+        return new Plugin[0];
+      }
+      return this.plugins;
+    }
+
     public String getTemplateId(){
         return templateId;
     }
-    
+
     public Thresholds getThresholds(){
         return thresholds;
     }
-    
+
     private FilePath[] buildExtraFiles(FilePath workspace) throws AbortException, IOException, InterruptedException{
         FilePath[] extraFilePaths = null;
         if (this.extraFiles != null && this.extraFiles.length > 0) {
@@ -101,11 +109,11 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
             master = new FilePath(workspace, this.masterFile);
             if (!master.exists()) {
                 throw new AbortException("Failed to find JMeter File : " + master.getName());
-            }            
+            }
         }
         return master;
     }
-    
+
     private String buildApiKey(Run<?,?> build) throws AbortException{
         String keyToUse = null;
         for (RedlineCredential c : CredentialsProvider
@@ -126,9 +134,9 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
     public HashMap<String,String> buildTestProperties(){
         return null;
     }
-    
+
     @Override
-    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener) 
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
             throws InterruptedException, IOException {
 
         PrintStream logger = listener.getLogger();
@@ -140,18 +148,18 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
 
         // Get the API Key to use.
         String apiKey = this.buildApiKey(build);
-        
+
         // Redline API Instance
         RedlineApi redlineApi = new RedlineApi(apiKey);
         RedlineTest testInfo;
-        
+
         // IF we have templateId we are just running clone of template.
         if ( this.templateId != null ){
             testInfo = redlineApi.runTemplate( this.templateId );
         } else {
             // If test (gatling, custom, jmeter) has a master file include
             FilePath master = this.buildMasterFile(workspace);
-            
+
             // Send over extra files.
             FilePath[] extraFilePaths = this.buildExtraFiles(workspace);
 
@@ -171,7 +179,7 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
                 }
             }
 
-            testInfo = redlineApi.runTest(this.testType, this.name, this.desc, this.storeOutput, master, extraFilePaths, map, this.servers);
+            testInfo = redlineApi.runTest(this.testType, this.name, this.desc, this.storeOutput, master, extraFilePaths, map, this.servers, this.plugins );
         }
 
         // Check that a test was really started.
@@ -233,15 +241,15 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
 //            }
 //        }
     }
-    
+
     private Result checkThresholds(RedlineTest testStatus, PrintStream logger ){
         Result result = Result.SUCCESS;
         if ( this.thresholds != null ){
             logger.println( "Checking Thresholds." );
-            logger.println("Success (" + testStatus.getSuccessRate() + ") " + 
-                    "stable(" + thresholds.getErrorUnstableThreshold() + ") " + 
+            logger.println("Success (" + testStatus.getSuccessRate() + ") " +
+                    "stable(" + thresholds.getErrorUnstableThreshold() + ") " +
                     "fail(" + thresholds.getErrorFailedThreshold() + ") ");
-            
+
             logger.println("Response (" + (testStatus.getAvergageResponseTime() * 1000) + ") " +
                     "stable(" + thresholds.getResponseTimeUnstableThreshold() + ") " +
                     "fail(" + thresholds.getResponseTimeFailedThreshold() + ") ");
@@ -259,7 +267,7 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
                 return Result.FAILURE;
             } else if ( thresholds.checkResponseTimeUnstable((int) testStatus.getAvergageResponseTime()*1000)){
                 logger.println("checkResponseTimeUnstable");
-                result = Result.UNSTABLE;                
+                result = Result.UNSTABLE;
             }
         } else {
             logger.println( "No thresholds set." );
