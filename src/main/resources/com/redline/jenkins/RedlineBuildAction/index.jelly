@@ -1,18 +1,18 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-	<l:layout css="/plugin/loaderio-jenkins-plugin/css/css.css">
+	<l:layout>
 
 		<st:include it="${it.run}" page="sidepanel.jelly" from="${it.run}" />
 		<l:main-panel>
-			<h1><a href="http://redline13.com" target="_blank">${%Redline13 LoadTest Report}</a></h1>
+			<h1><a href="http://redline13.com/LoadTest/View/${it.testId}" target="_blank">${%Redline13 LoadTest Report}</a></h1>
 			<br/>
 			<j:if test="${it.testId == 0}">
 				<div>Test not finished or invalid</div>
 			</j:if>
 			<j:if test="${it.testId != null}">
-				<iframe 
-					width="100%" 
+				<iframe
+					width="100%"
 					height="1800"
 					style="border-width:0"
 					src="${it.domain}/share/iframe/${it.testId}/${it.referenceId}">
