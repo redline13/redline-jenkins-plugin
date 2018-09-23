@@ -28,11 +28,11 @@ public class RedlineJMeterBuilderTest {
 
     @ClassRule
     public static BuildWatcher buildWatcher = new BuildWatcher();
-    
+
     @Rule
     public JenkinsRule r = new JenkinsRule();
-    
-    
+
+
     public RedlineJMeterBuilderTest() {
     }
 
@@ -41,7 +41,7 @@ public class RedlineJMeterBuilderTest {
 
         // Given
         String name = "How Now!";
-        JMeterBuilder builder = new JMeterBuilder(null, name, Boolean.TRUE, null, null, null, null, null, null, null);
+        JMeterBuilder builder = new JMeterBuilder( name, Boolean.TRUE );
         FreeStyleProject p = r.createFreeStyleProject();
         p.getBuildersList().add(builder);
 
@@ -60,12 +60,12 @@ public class RedlineJMeterBuilderTest {
         WorkflowJob p = r.jenkins.createProject(WorkflowJob.class, "p");
         CpsFlowDefinition c = new CpsFlowDefinition("node {step([$class: 'RedlineJMeterBuilder', name: '"+name+"'])}", true);
         p.setDefinition(c);
-        
+
         // When
         WorkflowRun build = p.scheduleBuild2(0).get();
 
         // Then
-        r.assertLogContains("Pipeline JMeter Loxad Test ("+name+").", build);        
+        r.assertLogContains("Pipeline JMeter Loxad Test ("+name+").", build);
     }
-    
+
 }
