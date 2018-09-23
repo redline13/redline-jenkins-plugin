@@ -13,7 +13,8 @@ import hudson.model.Run;
 public class RedlineBuildAction implements Action {
 
     private final Run<?, ?> build;
-    private final RedlineTest test;
+    private final int testId;
+    private final String referenceId;
 
     /**
      * Track which 'Build' and which 'Test' we display action for.
@@ -23,33 +24,25 @@ public class RedlineBuildAction implements Action {
      */
     public RedlineBuildAction(Run<?, ?> build, RedlineTest test) {
         this.build = build;
-        this.test = test;
+        if ( test != null ){
+          this.testId = test.getTestId();
+          this.referenceId = test.getReferenceId();
+        } else {
+          this.testId = 0;
+          this.referenceId = null;
+        }
     }
 
     public Run<?, ?> getRun() {
         return build;
     }
 
-    public RedlineTest getTest() {
-        return this.test;
-    }
-
     public int getTestId() {
-
-        if (this.test == null) {
-            return 0;
-        }
-
-        return this.test.getTestId();
+      return this.testId;
     }
 
     public String getReferenceId() {
-
-        if (this.test == null) {
-            return "";
-        }
-
-        return this.test.getReferenceId();
+      return this.referenceId;
     }
 
     @Override
