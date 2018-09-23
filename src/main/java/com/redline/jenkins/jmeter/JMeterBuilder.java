@@ -25,6 +25,22 @@ public class JMeterBuilder extends RedlineBuilder {
     private final String opts;
     private final String jvmArgs;
 
+    public JMeterBuilder( String desc, Boolean storeOutput ){
+      this.desc = desc;
+      this.storeOutput = storeOutput;
+
+      this.name = null;
+      this.masterFile = null;
+      this.extraFiles = null;
+      this.jmeterVersion = null;
+      this.opts = null;
+      this.jvmArgs = null;
+      this.servers = null;
+      this.thresholds = null;
+      this.testType = "jmeter-test";
+      this.plugins = null;
+    }
+
     @DataBoundConstructor
     public JMeterBuilder(
             String name,
