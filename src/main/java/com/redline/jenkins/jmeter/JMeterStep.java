@@ -128,6 +128,8 @@ public class JMeterStep extends AbstractStepImpl {
 
         public ListBoxModel doFillJmeterVersionItems() {
             ListBoxModel items = new ListBoxModel();
+            items.add("Nightly", "nightly");
+            items.add("5.0", "5.0");
             items.add("4.0", "4.0");
             items.add("3.1", "3.1");
             items.add("3.0", "3.0");
