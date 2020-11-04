@@ -5,7 +5,7 @@
 
 		<st:include it="${it.run}" page="sidepanel.jelly" from="${it.run}" />
 		<l:main-panel>
-			<h1><a href="http://redline13.com/LoadTest/View/${it.testId}" target="_blank">${%Redline13 LoadTest Report}</a></h1>
+			<h1><a href="https://www.redline13.com/LoadTest/View/${it.testId}" target="_blank">${%Redline13 LoadTest Report}</a></h1>
 			<br/>
 			<j:if test="${it.testId == 0}">
 				<div>Test not finished or invalid</div>
@@ -15,7 +15,7 @@
 					width="100%"
 					height="1800"
 					style="border-width:0"
-					src="${it.domain}/share/iframe/${it.testId}/${it.referenceId}">
+					src="${it.domain}share/iframe/${it.testId}/${it.referenceId}">
 					<p>Your browser does not support iframes.</p>
 				</iframe>
 			</j:if>
