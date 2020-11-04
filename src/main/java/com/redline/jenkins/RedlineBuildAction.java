@@ -52,12 +52,12 @@ public class RedlineBuildAction implements Action {
 
     @Override
     public String getDisplayName() {
-        return "Redline13 Report";
+        return "Redline for " + this.getTestId();
     }
 
     @Override
     public String getUrlName() {
-        return "redline";
+        return "redline-" + this.getTestId();
     }
 
     public String getDomain() {
