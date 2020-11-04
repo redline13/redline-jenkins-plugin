@@ -1,10 +1,6 @@
 package com.redline.jenkins.jmeter;
 
-import com.redline.jenkins.ExtraFile;
-import com.redline.jenkins.RedlineBuilder;
-import com.redline.jenkins.Servers;
-import com.redline.jenkins.Thresholds;
-import com.redline.jenkins.Plugin;
+import com.redline.jenkins.*;
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
@@ -39,6 +35,7 @@ public class JMeterBuilder extends RedlineBuilder {
       this.thresholds = null;
       this.testType = "jmeter-test";
       this.plugins = null;
+      this.cloudKey = null;
     }
 
     @DataBoundConstructor
@@ -53,7 +50,8 @@ public class JMeterBuilder extends RedlineBuilder {
             String jvmArgs,
             Servers[] servers,
             Thresholds thresholds,
-            Plugin[] plugins
+            Plugin[] plugins,
+            CloudKey cloudKey
         ) {
         this.name = name;
         this.desc = desc;
@@ -67,6 +65,7 @@ public class JMeterBuilder extends RedlineBuilder {
         this.thresholds = thresholds;
         this.testType = "jmeter-test";
         this.plugins = plugins;
+        this.cloudKey = cloudKey;
     }
 
     public String getJmeterVersion() {
@@ -98,8 +97,6 @@ public class JMeterBuilder extends RedlineBuilder {
         public boolean isApplicable(Class<? extends AbstractProject> type) {
             return true;
         }
-
-        @Override
         public String getDisplayName() {
             return "RedLine13 JMeter";
         }
@@ -107,6 +104,7 @@ public class JMeterBuilder extends RedlineBuilder {
         public ListBoxModel doFillJmeterVersionItems() {
             ListBoxModel items = new ListBoxModel();
             items.add("Nightly", "nightly");
+            items.add("5.3", "5.3");
             items.add("5.2", "5.2");
             items.add("5.0", "5.0");
             items.add("4.0", "4.0");

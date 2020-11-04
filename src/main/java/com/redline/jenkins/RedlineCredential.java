@@ -10,11 +10,22 @@ import hudson.util.Secret;
  */
 public interface RedlineCredential extends Credentials {
 
+    /**
+     * Get description string for credentials screen.
+     * @return String
+     */
     public String getDescription();
 
+    /**
+     * The API Key bot masked for display.
+     * @return String  AAAA...AAAA
+     */
     public String getId();
-    
-    @NonNull
+
+    /**
+     * The stored API Key.
+     * @return String API Key
+     */
     public Secret getApiKey();
 
 }

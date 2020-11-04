@@ -52,7 +52,8 @@ public class JMeterStepExecution extends AbstractSynchronousNonBlockingStepExecu
                 step.getJvmArgs(),
                 step.getServers(),
                 step.getThresholds(),
-                step.getPlugins()
+                step.getPlugins(),
+                step.getCloudKey()
         );
         builder.perform(build, ws, launcher, listener);
         return null;

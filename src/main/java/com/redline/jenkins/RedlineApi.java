@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Proxy;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+
 import jenkins.model.Jenkins;
 
 import net.sf.json.JSONException;
@@ -75,6 +78,38 @@ public class RedlineApi {
         Result result = doRequest(new HttpGet(), "status");
         return !result.isFail();
 
+    }
+
+    /**
+     * Call api to get list of cloud keys for a test.
+     *
+     * @return List of cloud keys available to run from RL
+     */
+    public Map<String, String> getCloudKeys() {
+      Result result = doRequest(new HttpGet(), "cloudKeys");
+      if (result.isFail()) {
+          return null;
+      }
+
+    JSONObject list;
+      try {
+          list = (JSONObject) JSONSerializer.toJSON(result.body);
+          if (list == null ) {
+              return null;
+          }
+      } catch (RuntimeException ex) {
+          logger.println("Got Exception: " + ex);
+          return null;
+      }
+
+      Map<String, String> clouds = new HashMap<>();
+      Iterator<String> keys = list.keys();
+      while(keys.hasNext()) {
+          String key = keys.next();
+          clouds.put( key, list.getString(key) );
+      }
+
+      return clouds;
     }
 
     /**
@@ -160,7 +195,8 @@ public class RedlineApi {
             FilePath[] extras,
             HashMap<String, String> testProperties,
             Servers servers[],
-            Plugin plugins[] ) throws IOException, InterruptedException {
+            Plugin plugins[],
+            CloudKey cloudKey ) throws IOException, InterruptedException {
 
         // Build up HTTP Post object using multipart builder.
         HttpPost request = new HttpPost(baseApiUri);
@@ -170,6 +206,9 @@ public class RedlineApi {
         meb.addTextBody("name", testName);
         meb.addTextBody("desc", testDescription);
         meb.addTextBody("storeOutput", storeOutput ? "T" : "F");
+        if ( cloudKey != null && cloudKey.getCloudKey() != null ){
+            meb.addTextBody("keyPairId", cloudKey.getCloudKey());
+        }
 
         // The File is added as a stream
         if (file != null) {
@@ -346,7 +385,7 @@ public class RedlineApi {
      * The request is built and executed for path. A Result object is used to
      * wrap the http response.
      *
-     * @return Response
+     * @return Response HTTP Result
      */
     private Result doRequest(HttpRequestBase request, String path) {
 

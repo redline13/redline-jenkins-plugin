@@ -1,9 +1,11 @@
 package com.redline.jenkins;
 
+import com.cloudbees.plugins.credentials.ContextInPath;
 import com.cloudbees.plugins.credentials.CredentialsDescriptor;
 import com.cloudbees.plugins.credentials.CredentialsScope;
 
 import hudson.Extension;
+import hudson.model.ModelObject;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.Secret;
@@ -43,10 +45,18 @@ public class RedlineCredentialImpl extends RedlineCredentialAbstract {
         this.description = description;
     }
 
+    /**
+     * User defined description
+     * @return String description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * API Key for calling redline13
+     * @return Secret
+     */
     public Secret getApiKey() {
         return apiKey;
     }
@@ -64,7 +74,7 @@ public class RedlineCredentialImpl extends RedlineCredentialAbstract {
         }
 
         @Override
-        public ListBoxModel doFillScopeItems() {
+        public ListBoxModel doFillScopeItems(@ContextInPath ModelObject context) {
             ListBoxModel m = new ListBoxModel();
             m.add(CredentialsScope.GLOBAL.getDisplayName(), CredentialsScope.GLOBAL.toString());
             return m;

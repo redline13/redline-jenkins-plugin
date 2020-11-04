@@ -17,6 +17,8 @@
         This is required to capture logs and outputs from a performance test.
     </f:description>
 
+    <f:property field="cloudKey" />
+
     <f:section title="JMeter Properties"></f:section>
     <f:entry title="JMeter File In Project" field="jmeterFile">
         <f:textbox />

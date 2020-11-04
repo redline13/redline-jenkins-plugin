@@ -9,10 +9,17 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class RedlineCredentialAbstract extends BaseCredentials implements RedlineCredential {
 
+    /**
+     * Empty Constructor calls BaseCredentials with Global Scope.
+     */
     protected RedlineCredentialAbstract() {
         super(CredentialsScope.GLOBAL);
     }
 
+    /**
+     * Constructor for a given scope.
+     * @param scope pass through to parent.
+     */
     protected RedlineCredentialAbstract(CredentialsScope scope) {
         super(scope);
     }

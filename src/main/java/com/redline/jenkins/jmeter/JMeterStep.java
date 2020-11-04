@@ -5,11 +5,9 @@
  */
 package com.redline.jenkins.jmeter;
 
-import com.redline.jenkins.ExtraFile;
-import com.redline.jenkins.Servers;
-import com.redline.jenkins.Thresholds;
-import com.redline.jenkins.Plugin;
+import com.redline.jenkins.*;
 import hudson.Extension;
+import hudson.slaves.Cloud;
 import hudson.util.ListBoxModel;
 import javax.annotation.Nonnull;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
@@ -33,6 +31,7 @@ public class JMeterStep extends AbstractStepImpl {
     private final String jvmArgs;
     public Thresholds thresholds;
     public Plugin[] plugins;
+    public CloudKey cloudKey;
 
     @DataBoundConstructor
     public JMeterStep(
@@ -46,7 +45,8 @@ public class JMeterStep extends AbstractStepImpl {
             String jvmArgs,
             Servers[] servers,
             Thresholds thresholds,
-            Plugin[] plugins
+            Plugin[] plugins,
+            CloudKey cloudKey
     ) {
         this.name = name;
         this.desc = desc;
@@ -59,6 +59,7 @@ public class JMeterStep extends AbstractStepImpl {
         this.jvmArgs = jvmArgs;
         this.thresholds = thresholds;
         this.plugins = plugins;
+        this.cloudKey = cloudKey;
     }
 
     public String getName() {
@@ -108,6 +109,8 @@ public class JMeterStep extends AbstractStepImpl {
       return this.plugins;
     }
 
+    public CloudKey getCloudKey() { return this.cloudKey; }
+
     @Extension
     public static class DescriptorImpl extends AbstractStepDescriptorImpl{
 
@@ -129,6 +132,7 @@ public class JMeterStep extends AbstractStepImpl {
         public ListBoxModel doFillJmeterVersionItems() {
             ListBoxModel items = new ListBoxModel();
             items.add("Nightly", "nightly");
+            items.add("5.3", "5.3");
             items.add("5.2", "5.2");
             items.add("5.0", "5.0");
             items.add("4.0", "4.0");

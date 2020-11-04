@@ -38,6 +38,7 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
     public Servers[] servers;
     public Thresholds thresholds;
     public Plugin[] plugins;
+    public CloudKey cloudKey;
 
     public String getName() {
         return name;
@@ -58,6 +59,8 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
     public ExtraFile[] getExtraFiles() {
         return extraFiles;
     }
+
+    public CloudKey getCloudKey() { return cloudKey; }
 
     public Servers[] getServers() {
         if (servers == null) {
@@ -179,7 +182,17 @@ public class RedlineBuilder extends Builder implements SimpleBuildStep{
                 }
             }
 
-            testInfo = redlineApi.runTest(this.testType, this.name, this.desc, this.storeOutput, master, extraFilePaths, map, this.servers, this.plugins );
+            testInfo = redlineApi.runTest(
+                    this.testType,
+                    this.name,
+                    this.desc,
+                    this.storeOutput,
+                    master,
+                    extraFilePaths,
+                    map,
+                    this.servers,
+                    this.plugins,
+                    this.cloudKey );
         }
 
         // Check that a test was really started.
